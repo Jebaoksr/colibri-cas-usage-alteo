@@ -56,6 +56,12 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:16p
 .muted{color:var(--muted);font-size:.9rem}
 .meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:20px;font-size:.88rem;color:var(--muted)}
 .meta b{color:var(--ink);font-weight:600}
+.notice{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:4px;padding:16px 20px;margin-bottom:20px;display:flex;flex-direction:column;gap:7px}
+.notice p{font-size:.96rem}
+.notice .ask{font-size:1.04rem;color:var(--brand)}
+.remark{margin-top:12px}
+.remark label{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700;margin-bottom:5px}
+.remark textarea{min-height:46px;font-size:.93rem}
 /* flows */
 .flows{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
 .flow{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--brand2);border-radius:4px;padding:18px 20px;display:flex;flex-direction:column}
@@ -158,13 +164,20 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
     <p class="eyebrow">Recueil des besoins · environ 8 minutes</p>
     <h1>Colibri vous assiste pour <b>préparer votre travail au mieux</b>.<br>Dites‑nous où commencer.</h1>
   </div>
-  <p class="lead">Le groupe rend l'intelligence artificielle accessible à tous ses outils via la plateforme <b>Aiset</b> et l'agent <b>Colibri</b>, développé par <b>Braft</b>. Colibri est connecté à <b>Outlook (mails et agenda), SharePoint, Odoo, Teams et Aiset</b> : il lit, croise et produit, en respectant nos procédures, nos templates et notre nomenclature.</p>
-  <p class="lead" style="margin-top:10px">Quatre tâches courantes, revues étape par étape : le travail de préparation que Colibri prend en charge, et les décisions qui restent les vôtres.</p>
+
+  <div class="notice">
+    <p class="ask"><b>Ce que nous vous demandons :</b> noter, pour chaque cas d'usage, son utilité dans votre métier.</p>
+    <p>Commencez par la première page : votre nom, votre entité et votre métier. Les cas d'usage affichés ensuite dépendent du métier que vous aurez choisi.</p>
+    <p><b>Version de démonstration :</b> vos réponses ne sont pas enregistrées. Il s'agit uniquement de montrer à quoi ressemblera le questionnaire.</p>
+  </div>
+
+  <p class="lead">Le groupe met l'intelligence artificielle au service de tous ses outils, avec la plateforme <b>Aiset</b> et l'agent <b>Colibri</b>, développé par <b>Braft</b>. Colibri accède à vos <b>mails, votre agenda, SharePoint, Odoo, Teams et Aiset</b>. Il y cherche l'information, la recoupe et prépare vos documents en respectant nos procédures, nos modèles et notre nomenclature.</p>
+  <p class="lead" style="margin-top:10px">Quatre tâches courantes, détaillées étape par étape : le travail de préparation que Colibri prend en charge, et ce que vous continuez à faire vous‑même.</p>
   <div class="flows" id="flows"></div>
   <div class="meta">
     <span><b>Pour qui ?</b> tous les collaborateurs du groupe</span>
-    <span><b>Ce qu'on vous demande</b> noter l'utilité de chaque cas pour votre métier</span>
-    <span><b>Réponses</b> nominatives, lues par l'équipe projet</span>
+    <span><b>Durée</b> environ 8 minutes</span>
+    <span><b>Vos réponses</b> serviront à choisir les développements prioritaires</span>
   </div>
   <div class="nav"><span></span><button class="btn primary" data-next>Commencer</button></div>
 </section>
@@ -495,7 +508,7 @@ const $=s=>document.querySelector(s);
 document.getElementById("logo").innerHTML=LOGO;
 document.getElementById("colibri-logo").src=COLIBRI;
 
-let state={step:"intro",notes:{},ouvert:{},metiers2:[]};
+let state={step:"intro",notes:{},ouvert:{},remarques:{},metiers2:[]};
 try{const s=localStorage.getItem("colibri-v4");if(s)state=Object.assign(state,JSON.parse(s));}catch(e){}
 function persist(){try{localStorage.setItem("colibri-v4",JSON.stringify(state));}catch(e){}}
 
@@ -503,7 +516,7 @@ $("#flows").innerHTML=FLOWS.map(f=>`<div class="flow">
   <div class="hd"><span class="num">${f.n}</span><h3>${f.t}</h3></div>
   <p class="situ">${f.s}</p>
   <ol>${f.st.map(x=>`<li>${x}</li>`).join("")}</ol>
-  <p class="rest"><b>~${f.p} % de préparation assurée.</b> Il vous reste : ${f.hu.join(" · ")}</p></div>`).join("");
+  <p class="rest"><b>Préparé par Colibri : ~${f.p} %.</b> Vous faites vous‑même : ${f.hu.join(" · ")}</p></div>`).join("");
 
 METIER_KEYS.forEach(k=>{
   $("#metier").insertAdjacentHTML("beforeend",`<button class="chip" type="button" data-k="${k}">${METIERS[k].t}</button>`);
@@ -515,19 +528,20 @@ function scenarioSection(key,idx){
   return `<section class="step" data-step="sc-${key}">
   <div class="card">
     <div class="title-rule"><p class="eyebrow">${idx} · ${m.short}</p><h2>${m.t}</h2></div>
-    <p class="muted" style="margin-bottom:6px">Colibri prépare l'essentiel ; la colonne de droite montre ce qui reste à faire. Notez l'utilité pour <b>votre</b> travail.</p>
+    <p class="muted" style="margin-bottom:6px">Pour chaque cas : à gauche, ce que Colibri prépare ; à droite, ce que vous continuez à faire vous‑même. Indiquez ensuite l'utilité pour votre métier, et ajoutez une remarque si vous le souhaitez.</p>
     ${m.sc.map(s=>`<div class="sc" data-id="${s.id}">
-      <div class="sc-head"><h3>${s.t}</h3><div class="share"><b>~${s.p} %</b><span>de préparation</span></div></div>
+      <div class="sc-head"><h3>${s.t}</h3><div class="share"><b>~${s.p} %</b><span>préparé par Colibri</span></div></div>
       <p class="situ">${s.s}</p>
       <div class="tags">${s.c.map(c=>`<span class="tag">${c}</span>`).join("")}</div>
       <div class="split">
-        <div class="box ai"><h4>Ce que Colibri fait</h4><ol>${s.ai.map(x=>`<li>${x}</li>`).join("")}</ol></div>
-        <div class="box hu"><h4>Ce qui vous reste</h4><ul>${s.hu.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+        <div class="box ai"><h4>Ce que Colibri prépare</h4><ol>${s.ai.map(x=>`<li>${x}</li>`).join("")}</ol></div>
+        <div class="box hu"><h4>Ce que vous faites vous‑même</h4><ul>${s.hu.map(x=>`<li>${x}</li>`).join("")}</ul></div>
       </div>
-      <div class="rate"><div class="lab">Utilité pour moi</div>
+      <div class="rate"><div class="lab">Utilité pour mon métier</div>
         <div class="seg">${LEVELS.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="false"><b>${v}</b><small>${l}</small></button>`).join("")}</div></div>
+      <div class="remark"><label for="r-${s.id}">Votre remarque sur ce cas (facultatif)</label><textarea id="r-${s.id}" data-remark="${s.id}" placeholder="Ce qui manque, ce qui ne conviendrait pas, une précision utile…"></textarea></div>
     </div>`).join("")}
-    <div class="field" style="margin-top:22px"><label for="o-${key}">Quel autre travail complet aimeriez‑vous confier à Colibri ?</label><textarea id="o-${key}" data-open="${key}"></textarea></div>
+    <div class="field" style="margin-top:22px"><label for="o-${key}">Quelle autre tâche aimeriez‑vous confier à Colibri dans votre métier ?</label><textarea id="o-${key}" data-open="${key}"></textarea></div>
   </div>
   <div class="nav"><button class="btn" data-prev>Retour</button><button class="btn primary" data-next>Continuer</button></div>
 </section>`;
@@ -538,6 +552,7 @@ function buildScenarios(){
   const keys=selectedMetiers();
   $("#scenarios").innerHTML=keys.map((k,i)=>scenarioSection(k,i+2)).join("");
   document.querySelectorAll("textarea[data-open]").forEach(t=>{t.value=state.ouvert[t.dataset.open]||"";t.addEventListener("input",e=>{state.ouvert[e.target.dataset.open]=e.target.value;persist();});});
+  document.querySelectorAll("textarea[data-remark]").forEach(t=>{t.value=(state.remarques||{})[t.dataset.remark]||"";t.addEventListener("input",e=>{(state.remarques=state.remarques||{})[e.target.dataset.remark]=e.target.value;persist();});});
   document.querySelectorAll(".sc").forEach(a=>{
     const id=a.dataset.id;if(state.notes[id]){const b=a.querySelector(`[data-v="${state.notes[id]}"]`);if(b)b.setAttribute("aria-pressed","true");}
     a.addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(!b)return;[...b.parentElement.children].forEach(c=>c.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");state.notes[id]=+b.dataset.v;persist();});
@@ -580,7 +595,7 @@ document.addEventListener("click",e=>{
 if(state.metier)buildScenarios();
 show(state.step==="done"?"intro":state.step);
 $("#send").addEventListener("click",()=>show("done"));
-$("#again").addEventListener("click",()=>{state={step:"intro",notes:{},ouvert:{},metiers2:[]};persist();location.reload();});
+$("#again").addEventListener("click",()=>{state={step:"intro",notes:{},ouvert:{},remarques:{},metiers2:[]};persist();location.reload();});
 
 const CODE="colibri2026";
 const DEMO_ROWS=(()=>{const P=[["Sophie","Martin","Deplasse","sup"],["Karim","Benali","CUB3","ing"],["Julie","Dupont","A+ Concept","cdp"],["Thomas","Peeters","Freestone","com"],["Anne","Lambert","FANDO","dir"],["Marc","Dubois","Deplasse","tech"],["Laura","Janssens","AISET","man"],["Pierre","Colin","Deplasse","ing"]];
@@ -588,6 +603,7 @@ const DEMO_ROWS=(()=>{const P=[["Sophie","Martin","Deplasse","sup"],["Karim","Be
  return P.map(([prenom,nom,entite,k],i)=>{const notes={};["all",...(PROJ_KEYS.includes(k)?["proj"]:[]),k].forEach(m=>METIERS[m].sc.forEach(sc=>{notes[sc.id]=Math.min(5,1+Math.floor(r()*5+(sc.id.endsWith("1")?0.9:0)));}));
   return {prenom,nom,entite,metier:METIERS[k].t,pilote:i%2?"Oui, je veux être testeur pilote":"Peut‑être, selon le sujet",notes,
    ouvert:i===1?{ing:"Récupérer automatiquement les relevés de compteurs envoyés en PDF par les clients et les injecter dans Aiset."}:i===2?{cdp:"Un rappel quand un jalon approche sans livrable déposé sur SharePoint."}:{},
+   remarques:i===1?{i1:"Attention aux compteurs à cheval sur deux périodes de facturation."}:i===3?{c4:"À condition que le ton des relances reste personnalisable."}:{},
    commentaire:i===4?"Priorité au suivi budgétaire multi‑entités et aux relances clients.":""};});})();
 let rows=[];
 function toResults(){$("#form-root").hidden=true;$("#results").hidden=false;$("#progress").hidden=true;window.scrollTo(0,0);}
@@ -610,7 +626,9 @@ function render(){
   $("#kDream").textContent=rs.reduce((a,r)=>a+Object.values(r.notes).filter(v=>v===5).length,0);
   $("#rank tbody").innerHTML=rk.map(r=>`<tr><td>${esc(r.t)}</td><td class="muted">${esc(r.m)}</td><td><div class="scorebar"><i style="width:${Math.round(r.u/5*100)}%"></i></div><span class="muted">${r.u.toFixed(1)}</span></td><td class="num">${Math.round(r.hi*100)}%</td><td class="num">${r.n}</td></tr>`).join("");
   $("#who tbody").innerHTML=rs.map(r=>`<tr><td>${esc(r.prenom)} ${esc(r.nom)}</td><td>${esc(r.entite)}</td><td>${esc(r.metier)}</td><td>${r.pilote.startsWith("Oui")?"✓":""}</td></tr>`).join("");
-  const v=[];rs.forEach(r=>{Object.entries(r.ouvert).forEach(([k,t])=>v.push({who:`${r.prenom} ${r.nom} · ${r.metier}`,t}));if(r.commentaire)v.push({who:`${r.prenom} ${r.nom} · ${r.metier}`,t:r.commentaire});});
+  const v=[];rs.forEach(r=>{Object.entries(r.ouvert||{}).forEach(([k,t])=>v.push({who:`${r.prenom} ${r.nom} · ${r.metier}`,t}));
+    Object.entries(r.remarques||{}).forEach(([k,t])=>{if(t&&t.trim())v.push({who:`${r.prenom} ${r.nom} · ${(ALLSC[k]||{s:{t:k}}).s.t}`,t});});
+    if(r.commentaire)v.push({who:`${r.prenom} ${r.nom} · ${r.metier}`,t:r.commentaire});});
   $("#verbs").innerHTML=v.map(x=>`<div class="verb">${esc(x.t)}<small>${esc(x.who)}</small></div>`).join("")||`<p class="muted">Aucun verbatim.</p>`;
 }
 </script>
