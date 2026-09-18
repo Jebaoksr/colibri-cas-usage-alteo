@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colibri — Cas d'usage ALTEO</title>
+<style>
+:root{
+  --bg:#F4F1EC; --card:#FFFFFF; --ink:#12242E; --brand:#00516F; --brand2:#1A7893; --brand3:#7CB4C6;
+  --pale:#C9DFE5; --accent:#D1871E; --muted:#5F6B72; --line:#E2DCD3; --line2:#C6CDD1;
+  --sel-bg:#00516F; --sel-fg:#FFFFFF; --ai-bg:#EAF2F5; --hu-bg:#F7EEE1;
+  --shadow:0 1px 2px rgba(0,54,74,.05),0 10px 26px rgba(0,54,74,.07);
+  --f:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#08222E; --card:#0E3040; --ink:#E7EEF1; --brand:#7CB4C6; --brand2:#9CCBD9; --brand3:#4E8FA4;
+  --pale:#1B4A5E; --accent:#E5A44C; --muted:#9BAAB2; --line:#194152; --line2:#2E5E72;
+  --sel-bg:#7CB4C6; --sel-fg:#08222E; --ai-bg:#10394A; --hu-bg:#33281A;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 26px rgba(0,0,0,.28);
+}}
+:root[data-theme="dark"]{
+  --bg:#08222E; --card:#0E3040; --ink:#E7EEF1; --brand:#7CB4C6; --brand2:#9CCBD9; --brand3:#4E8FA4;
+  --pale:#1B4A5E; --accent:#E5A44C; --muted:#9BAAB2; --line:#194152; --line2:#2E5E72;
+  --sel-bg:#7CB4C6; --sel-fg:#08222E; --ai-bg:#10394A; --hu-bg:#33281A;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 26px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16.5px;line-height:1.5;padding-inline:16px;padding-block:0 64px}
+h1,h2,h3,h4{color:var(--brand);font-weight:600;line-height:1.18;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:2.2rem;font-weight:300}
+h1 b{font-weight:700}
+h2{font-size:1.55rem}h3{font-size:1.18rem}h4{font-size:1rem}
+p{margin:0}
+.wrap{max-width:860px;margin:0 auto}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px 12px;border-bottom:2px solid var(--brand)}
+.logo{height:38px;width:auto;color:var(--brand);display:block}
+.logo path,.logo polygon,.logo rect{fill:currentColor}
+.eyebrow{font-size:.74rem;text-transform:uppercase;letter-spacing:.14em;color:var(--brand2);font-weight:700}
+.colibri-link{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--brand2)}
+.colibri-link img{display:block;height:32px;width:auto}
+.colibri-link span{display:flex;flex-direction:column;line-height:1.1}
+.colibri-link b{font-size:.95rem;font-weight:700;letter-spacing:.02em;color:var(--brand)}
+.colibri-link small{font-size:.68rem;text-transform:uppercase;letter-spacing:.13em;font-weight:700;color:var(--brand2)}
+.colibri-link:hover b,.colibri-link:focus-visible b{text-decoration:underline}
+.progress{display:flex;flex-direction:column;gap:6px;margin-block:14px 24px}
+.progress .bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.progress .bar i{display:block;height:100%;background:var(--brand2);width:0;transition:width .3s}
+.progress .lbl{display:flex;justify-content:space-between;font-size:.84rem;color:var(--muted)}
+.step{display:none}.step.active{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:22px 24px;box-shadow:var(--shadow)}
+.card + .card{margin-top:16px}
+.title-rule{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
+.title-rule::after{content:"";display:block;width:72px;height:3px;background:var(--accent)}
+.lead{font-size:1.04rem}
+.muted{color:var(--muted);font-size:.9rem}
+.meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:20px;font-size:.88rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+.notice{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:4px;padding:16px 20px;margin-bottom:20px;display:flex;flex-direction:column;gap:7px}
+.notice p{font-size:.96rem}
+.notice .ask{font-size:1.04rem;color:var(--brand)}
+.remark{margin-top:12px}
+.remark label{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700;margin-bottom:5px}
+.remark textarea{min-height:46px;font-size:.93rem}
+.cmd{display:inline-flex;align-items:center;gap:8px;background:var(--brand);color:#fff;border-radius:3px;padding:6px 13px;font-size:.93rem;font-weight:600}
+.cmd::before{content:"›";font-weight:700;opacity:.65}
+.real{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:4px;padding:22px 24px;margin-top:22px;box-shadow:var(--shadow)}
+.real .tagline{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:10px}
+.real h3{font-size:1.2rem;margin-bottom:4px}
+.real .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}
+.real h4{font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;font-weight:700}
+.real ol{margin:0;padding-left:18px;font-size:.93rem}
+.real ol li{margin-bottom:4px}
+.files{display:flex;flex-direction:column;gap:8px}
+.file{background:var(--ai-bg);border-left:3px solid var(--brand2);border-radius:4px;padding:9px 12px}
+.file b{display:block;font-size:.9rem;color:var(--brand);word-break:break-word}
+.file span{font-size:.87rem;color:var(--muted)}
+.real .foot{margin-top:16px;padding-top:12px;border-top:1px dashed var(--line2);font-size:.9rem;color:var(--muted)}
+.real .foot b{color:var(--accent)}
+.flow .cmdline{margin:8px 0 10px}
+.flow .got{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line2)}
+.flow .got h4{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:5px}
+.flow .got ul{margin:0;padding-left:16px;font-size:.88rem}
+.flow .got li{margin-bottom:3px;color:var(--ink)}
+.liv{margin-top:12px;background:var(--pale);border-radius:4px;padding:9px 13px;font-size:.93rem}
+.liv b{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--brand);font-weight:700;margin-right:6px}
+.inp{margin:0 0 12px;background:var(--hu-bg);border-radius:4px;padding:9px 13px;font-size:.93rem}
+.inp b{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:700;margin-right:6px}
+.flow .give{margin:0 0 10px;font-size:.88rem;color:var(--muted)}
+.flow .give b{color:var(--accent);font-weight:600}
+.real .give{margin-top:10px;font-size:.93rem;color:var(--muted)}
+.real .give b{color:var(--accent)}
+/* flows */
+.flows{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+.flow{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--brand2);border-radius:4px;padding:18px 20px;display:flex;flex-direction:column}
+.flow .hd{display:flex;align-items:baseline;gap:10px}
+.flow .num{font-size:.78rem;font-weight:700;color:var(--brand3);letter-spacing:.1em}
+.flow h3{font-size:1.06rem}
+.flow .situ{color:var(--muted);font-size:.88rem;margin:4px 0 10px}
+.flow ol{margin:0;padding-left:18px;font-size:.88rem;line-height:1.45}
+.flow ol li{margin-bottom:4px}
+.flow .rest{margin-top:auto;padding-top:12px;font-size:.85rem;color:var(--muted);border-top:1px dashed var(--line2)}
+.flow .rest b{color:var(--accent);font-weight:600}
+/* scenario */
+.sc{border-top:1px solid var(--line);padding:22px 0}
+.sc:first-of-type{border-top:0;padding-top:4px}
+.sc-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.sc-head h3{max-width:580px}
+.share{flex:none;text-align:right}
+.share b{display:block;font-size:1.45rem;font-weight:700;color:var(--brand2);line-height:1;font-variant-numeric:tabular-nums}
+.share span{font-size:.7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+.sc .situ{margin:8px 0 12px;color:var(--muted);font-size:.94rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tag{font-size:.72rem;font-weight:600;letter-spacing:.04em;padding:3px 9px;border-radius:3px;background:var(--pale);color:var(--brand)}
+.split{display:grid;grid-template-columns:3fr 2fr;gap:14px}
+.box{border-radius:4px;padding:13px 15px}
+.box.ai{background:var(--ai-bg);border-left:3px solid var(--brand2)}
+.box.hu{background:var(--hu-bg);border-left:3px solid var(--accent)}
+.box h4{font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:7px;font-weight:700}
+.box ol,.box ul{margin:0;padding-left:18px;font-size:.93rem}
+.box li{margin-bottom:3px}
+.rate{margin-top:14px}
+.rate .lab{font-size:.74rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700;margin-bottom:6px}
+.seg{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.seg button{border:1px solid var(--line2);background:var(--card);color:var(--ink);padding:8px 4px;font:inherit;cursor:pointer;border-radius:3px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.seg button b{font-size:1.05rem;font-weight:700}
+.seg button small{font-size:.7rem;line-height:1.15;text-align:center;color:var(--muted)}
+.seg button[aria-pressed=true]{background:var(--sel-bg);color:var(--sel-fg);border-color:var(--sel-bg)}
+.seg button[aria-pressed=true] small{color:var(--sel-fg);opacity:.88}
+.seg button[data-v="5"] b{color:var(--accent)}
+.seg button[data-v="5"][aria-pressed=true] b{color:var(--sel-fg)}
+/* form */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.field label{font-weight:600}
+.field .hint{font-size:.85rem;color:var(--muted)}
+input[type=text],select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line2);border-radius:3px;padding:9px 12px;width:100%}
+textarea{min-height:88px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line2);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:.93rem;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--sel-bg);color:var(--sel-fg);border-color:var(--sel-bg)}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:22px}
+.btn{font:inherit;font-weight:600;border-radius:3px;padding:10px 20px;cursor:pointer;border:1px solid var(--line2);background:var(--card);color:var(--ink)}
+.btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.err{color:#B5401C;font-size:.9rem;margin-top:8px;display:none}.err.show{display:block}
+.badge{display:inline-block;background:var(--pale);color:var(--brand);border-radius:3px;padding:3px 10px;font-size:.78rem;font-weight:700}
+footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:.83rem;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer button{background:none;border:0;color:var(--muted);font:inherit;font-size:.83rem;cursor:pointer;text-decoration:underline}
+/* results */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.kpi{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--brand2);border-radius:4px;padding:12px 14px}
+.kpi b{display:block;font-size:1.6rem;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums}
+.kpi span{font-size:.8rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl{overflow-x:auto}
+.scorebar{height:6px;background:var(--line);border-radius:3px;min-width:80px}.scorebar i{display:block;height:100%;background:var(--brand2);border-radius:3px}
+.tools-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+.verb{border-left:3px solid var(--accent);padding:6px 12px;margin:8px 0;font-size:.93rem}.verb small{display:block;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:700px){
+  h1{font-size:1.65rem}
+  .flows,.grid2,.split,.kpis,.two{grid-template-columns:1fr}
+  .card{padding:18px 16px}
+  .seg button small{display:none}
+}
+@media (prefers-reduced-motion:reduce){.progress .bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div id="logo"></div>
+  <a class="colibri-link" href="https://colibri-braft.be/fr/" target="_blank" rel="noopener">
+    <img id="colibri-logo" alt="" width="34" height="32">
+    <span><b>Colibri</b><small>cas d'usage IA</small></span>
+  </a>
+</header>
+
+<div id="form-root">
+<div class="progress" id="progress" hidden>
+  <div class="bar"><i id="pbar"></i></div>
+  <div class="lbl"><span id="plabel"></span><span id="pcount"></span></div>
+</div>
+
+<section class="step active" data-step="intro">
+  <div class="title-rule" style="margin-top:26px">
+    <p class="eyebrow">Stratégie IA du groupe · enquête interne · environ 8 minutes</p>
+    <h1>Dans le cadre de notre stratégie IA,<br>nous avons besoin de <b>votre avis</b>.</h1>
+  </div>
+
+  <div class="notice">
+    <p class="ask"><b>Ce que nous vous demandons :</b> noter, pour chaque cas d'usage, son utilité dans votre métier.</p>
+    <p>Vos réponses détermineront les développements que les équipes Aiset et Braft réaliseront en premier. Personne ne connaît votre métier mieux que vous : c'est pourquoi votre avis compte.</p>
+    <p>Commencez par la première page : votre nom, votre entité et votre métier. Les cas d'usage affichés ensuite dépendent du métier que vous aurez choisi.</p>
+    <p><b>Version de démonstration :</b> vos réponses ne sont pas enregistrées. Il s'agit uniquement de montrer à quoi ressemblera le questionnaire.</p>
+  </div>
+
+  <h2 style="margin-bottom:10px">Un agent qui travaille, pas un chatbot à qui l'on explique tout</h2>
+  <p class="lead">Le groupe met l'intelligence artificielle au service de tous ses outils, avec la plateforme <b>Aiset</b> et l'agent <b>Colibri</b>, développé par <b>Braft</b>. Colibri accède à vos <b>mails, votre agenda, SharePoint, Odoo, Teams et Aiset</b>. Il y cherche l'information, la recoupe et prépare vos documents en respectant nos procédures, nos modèles et notre nomenclature.</p>
+  <p class="lead" style="margin-top:10px">Colibri connaît nos métiers : nos procédures, nos modèles de documents, notre nomenclature et nos données. Vous lancez une commande courte — « démarre le projet », « analyse l'énergie », « prépare ma réunion » — et il déroule seul toutes les étapes jusqu'au document fini. Il ne s'agit pas d'écrire des instructions pendant une heure : vous guidez au départ, vous contrôlez à l'arrivée.</p>
+
+  <div class="real" id="real"></div>
+
+  <h2 style="margin:26px 0 4px">Quatre commandes, quatre livrables</h2>
+  <p class="lead">Pour chacune : la commande, ce que Colibri fait, et ce que vous obtenez.</p>
+  <div class="flows" id="flows"></div>
+  <div class="meta">
+    <span><b>Pour qui ?</b> tous les collaborateurs du groupe</span>
+    <span><b>Durée</b> environ 8 minutes</span>
+    <span><b>Vos réponses</b> serviront à choisir les développements prioritaires</span>
+  </div>
+  <div class="nav"><span></span><button class="btn primary" data-next>Commencer</button></div>
+</section>
+
+<section class="step" data-step="id">
+  <div class="card">
+    <div class="title-rule"><p class="eyebrow">1 · Vous</p><h2>Qui répond ?</h2></div>
+    <div class="grid2">
+      <div class="field"><label for="prenom">Prénom</label><input type="text" id="prenom" autocomplete="given-name"></div>
+      <div class="field"><label for="nom">Nom</label><input type="text" id="nom" autocomplete="family-name"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label for="entite">Entité</label>
+        <select id="entite"><option value="">Choisir…</option><option>Deplasse</option><option>A+ Concept</option><option>Freestone</option><option>CUB3</option><option>FANDO</option><option>AISET</option><option>Braft</option><option>ALTEO group (holding)</option><option>Autre</option></select></div>
+      <div class="field"><label for="pole">Pôle</label>
+        <select id="pole"><option value="">Choisir…</option><option>Advisory</option><option>Engineering</option><option>Exploitation</option><option>Support / transversal</option></select></div>
+    </div>
+    <div class="field"><label>Votre métier principal</label><span class="hint">Il détermine les cas d'usage que vous allez noter.</span>
+      <div class="chips" id="metier" data-single></div></div>
+    <div class="field"><label>Noter aussi les cas d'un autre métier ? <span class="muted">(facultatif)</span></label>
+      <div class="chips" id="metiers2"></div></div>
+    <div class="grid2">
+      <div class="field"><label>Niveau</label>
+        <div class="chips" id="niveau" data-single>
+          <button class="chip" type="button">Collaborateur</button><button class="chip" type="button">Senior / expert</button><button class="chip" type="button">Manager</button><button class="chip" type="button">Direction</button>
+        </div></div>
+      <div class="field"><label>Ancienneté</label>
+        <div class="chips" id="anciennete" data-single>
+          <button class="chip" type="button">&lt; 1 an</button><button class="chip" type="button">1 – 3 ans</button><button class="chip" type="button">3 – 10 ans</button><button class="chip" type="button">&gt; 10 ans</button>
+        </div></div>
+    </div>
+    <p class="err" id="err1">Merci de compléter prénom, nom, entité, métier et niveau.</p>
+  </div>
+  <div class="nav"><button class="btn" data-prev>Retour</button><button class="btn primary" data-next>Voir mes cas d'usage</button></div>
+</section>
+
+<div id="scenarios"></div>
+
+<section class="step" data-step="adopt">
+  <div class="card">
+    <div class="title-rule"><p class="eyebrow">Dernière étape</p><h2>Et vous, avec l'IA ?</h2></div>
+    <div class="field"><label>Aujourd'hui, vous utilisez l'IA…</label>
+      <div class="chips" id="usage" data-single>
+        <button class="chip" type="button">Jamais</button><button class="chip" type="button">Occasionnellement</button><button class="chip" type="button">Régulièrement (ChatGPT, Claude…)</button><button class="chip" type="button">Copilot dans M365</button><button class="chip" type="button">J'ai mes propres automatisations</button>
+      </div></div>
+    <div class="field"><label>Ce qui vous freinerait</label>
+      <div class="chips" id="freins">
+        <button class="chip" type="button">Confidentialité des données clients</button><button class="chip" type="button">Fiabilité des résultats</button><button class="chip" type="button">Pas le temps d'apprendre</button><button class="chip" type="button">Perdre la maîtrise de mon travail</button><button class="chip" type="button">Je ne vois pas de cas utile pour moi</button><button class="chip" type="button">Rien, allons‑y</button>
+      </div></div>
+    <div class="field"><label>Volontaire pour tester Colibri en avant‑première ?</label>
+      <div class="chips" id="pilote" data-single>
+        <button class="chip" type="button">Oui, je veux être testeur pilote</button><button class="chip" type="button">Peut‑être, selon le sujet</button><button class="chip" type="button">Non, pas maintenant</button>
+      </div></div>
+    <div class="field"><label for="commentaire">Un dernier mot pour l'équipe Aiset / Braft ?</label><textarea id="commentaire"></textarea></div>
+  </div>
+  <div class="nav"><button class="btn" data-prev>Retour</button><button class="btn accent" id="send">Envoyer mes réponses</button></div>
+</section>
+
+<section class="step" data-step="done">
+  <div class="card">
+    <span class="badge">Version démo — réponses non enregistrées</span>
+    <h2 style="margin-top:12px">Merci. Votre contribution part directement chez Aiset et Braft.</h2>
+    <p class="lead" style="margin-top:10px">Les cas d'usage les plus demandés seront développés en premier et présentés à tout le groupe avec un calendrier. Si vous vous êtes porté volontaire, l'équipe projet vous recontactera pour le pilote.</p>
+    <div class="chips" style="margin-top:16px"><button class="btn" id="again">Répondre pour un autre profil</button></div>
+  </div>
+</section>
+</div>
+
+<div id="results" hidden>
+  <div class="title-rule" style="margin-top:22px"><p class="eyebrow">Espace équipe projet</p><h2>Résultats</h2></div>
+  <div id="resLogin" class="card">
+    <div class="field"><label for="code">Code d'accès</label><input type="text" id="code" autocomplete="off"></div>
+    <div class="nav"><button class="btn" id="resBack">Retour au formulaire</button><button class="btn primary" id="resEnter">Ouvrir</button></div>
+    <p class="err" id="errCode">Code incorrect.</p>
+  </div>
+  <div id="resBody" hidden>
+    <p class="muted" style="margin-bottom:12px">Version démo : données d'exemple fictives. Sur la version déployée, ces tableaux se remplissent en direct, avec export CSV et synthèse IA par profil.</p>
+    <div class="kpis">
+      <div class="kpi"><b id="kCount">0</b><span>réponses</span></div>
+      <div class="kpi"><b id="kEnt">0</b><span>entités représentées</span></div>
+      <div class="kpi"><b id="kPil">0</b><span>volontaires pilote</span></div>
+      <div class="kpi"><b id="kDream">0</b><span>« j'en rêve » exprimés</span></div>
+    </div>
+    <div class="tools-row">
+      <label for="fMetier" class="muted">Filtrer :</label>
+      <select id="fMetier" style="width:auto"><option value="">Tous les métiers</option></select>
+      <select id="fEntite" style="width:auto"><option value="">Toutes les entités</option></select>
+      <button class="btn" id="resBack2">Formulaire</button>
+    </div>
+    <div class="card"><h3>Classement des cas d'usage</h3>
+      <p class="muted" style="margin:4px 0 12px">Utilité moyenne (1 inutile → 5 j'en rêve) et part des répondants à 4 ou 5.</p>
+      <div class="tbl"><table id="rank"><thead><tr><th>Cas d'usage</th><th>Métier</th><th>Utilité</th><th class="num">≥4</th><th class="num">n</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="two" style="margin-top:16px">
+      <div class="card"><h3>Répondants</h3><div class="tbl"><table id="who"><thead><tr><th>Nom</th><th>Entité</th><th>Métier</th><th>Pilote</th></tr></thead><tbody></tbody></table></div></div>
+      <div class="card"><h3>Verbatims</h3><div id="verbs"></div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>Formulaire interne ALTEO Group · réponses lues par l'équipe projet Colibri (Aiset / Braft).</span>
+  <button id="toResults">Espace équipe projet</button>
+</footer>
+</div>
+
+<script>
+const LOGO=`<svg class="logo" version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1374.8 595.28" style="enable-background:new 0 0 1374.8 595.28;" xml:space="preserve"> <g> <g> <path d="M297.64,510.24c56.79,0,110.18-22.12,150.33-62.27s62.27-93.54,62.27-150.33c0-56.78-22.11-110.17-62.27-150.32 c-40.15-40.16-93.54-62.28-150.33-62.28c-56.79,0-110.17,22.12-150.33,62.28c-40.15,40.15-62.27,93.54-62.27,150.32 c0,56.79,22.12,110.17,62.27,150.33C187.47,488.12,240.85,510.24,297.64,510.24 M136.73,182.01l161.1-0.34l-0.03-14.48 l-149.53,0.31c2.97-3.4,6.05-6.72,9.28-9.94c29.76-29.76,67.32-48.88,108.07-55.45l114.16,113.68l10.22-10.27L284.04,100 c4.51-0.3,9.04-0.46,13.6-0.46c42.09,0,82.16,13.05,115.63,37.2l0.34,161.1l14.48-0.03l-0.31-149.53c3.4,2.97,6.72,6.06,9.94,9.28 c29.76,29.76,48.88,67.32,55.46,108.07L379.5,379.78L389.77,390l105.51-105.96c0.31,4.51,0.47,9.03,0.47,13.59 c0,42.08-13.06,82.16-37.21,115.63l-161.1,0.34l0.03,14.49L447,427.78c-2.97,3.4-6.05,6.72-9.28,9.94 c-29.75,29.76-67.31,48.87-108.07,55.45L215.5,379.5l-10.23,10.27l105.96,105.52c-4.51,0.3-9.04,0.46-13.6,0.46 c-42.09,0-82.16-13.04-115.63-37.21l-0.34-161.1l-14.48,0.03L167.5,447c-3.39-2.97-6.72-6.05-9.94-9.28 c-29.76-29.76-48.87-67.33-55.46-108.07L215.78,215.5l-10.27-10.22L100,311.23c-0.3-4.5-0.46-9.04-0.46-13.59 C99.53,255.56,112.58,215.48,136.73,182.01"/> </g> <path d="M668.46,232.18h39.35l-19.79-75.64L668.46,232.18z M627.96,293.89l45.33-165.45h31.53l44.41,165.45h-27.15l-9.9-38.9 h-48.32l-9.67,38.9H627.96z"/> <polygon points="789.65,293.89 789.65,128.44 814.97,128.44 814.97,268.92 871.57,268.92 871.57,293.89 "/> <polygon points="929.58,293.89 929.58,152.93 886.32,152.93 886.32,128.44 998.15,128.44 998.15,152.93 954.89,152.93 954.89,293.89 "/> <polygon points="1038.79,293.89 1038.79,128.44 1124.62,128.44 1124.62,152.7 1063.87,152.7 1063.87,198.32 1114.04,198.32 1114.04,222.09 1063.87,222.09 1063.87,269.64 1128.08,269.64 1128.08,293.89 "/> <path d="M1263.3,211.05c0-40.73-13.35-59.37-31.29-59.37c-17.95,0-31.29,18.64-31.29,59.37c0,40.96,12.88,59.6,30.83,59.6 C1249.72,270.65,1263.3,252.01,1263.3,211.05 M1174.25,211.05c0-54.77,24.85-82.61,57.76-82.61s57.76,27.84,57.76,82.61 c0,55-25.31,82.84-58.22,82.84C1198.87,293.89,1174.25,266.05,1174.25,211.05"/> <path d="M627.96,407.61c0-38.32,15.11-61.07,41.02-61.07c21.09,0,32.22,14.39,32.72,37.48l-11.96,2.51 c0-17.73-7.47-27.94-21.26-27.94c-17.77,0-27.24,18.74-27.24,48.69c0,30.79,8.97,47.52,26.57,47.52 c13.45,0,21.59-11.21,21.59-33.13v-4.01h-23.59v-10.2h35.71v56.88h-9.8v-21.25c-3.16,13.89-12.46,23.76-26.91,23.76 C641.75,466.83,627.96,446.42,627.96,407.61"/> <path d="M719.84,464.32v-81.98h11.46v20.75c3.98-12.88,12.95-22.92,26.74-22.92h0.17v13.22h-1.66c-15.61,0-24.75,10.87-24.75,29.45 v41.49H719.84z"/> <path d="M810.13,423c0-22.59-7.64-32.46-18.1-32.46c-10.46,0-18.1,9.87-18.1,32.46s7.64,32.46,18.1,32.46 C802.49,455.45,810.13,445.58,810.13,423 M761.63,423c0-27.61,12.29-43,30.39-43c18.27,0,30.56,15.39,30.56,43 c0,27.6-12.29,43-30.56,43C773.92,465.99,761.63,450.6,761.63,423"/> <path d="M835.31,438.89v-56.55h11.96v53.54c0,12.71,2.49,19.07,11.3,19.07c10.96,0,18.27-10.71,18.27-26.1v-46.51h11.96v81.98 h-11.46v-16.9c-3.15,9.2-9.8,18.57-22.25,18.57C841.12,465.99,835.31,455.12,835.31,438.89"/> <path d="M953.93,423.66c0-22.92-6.64-32.62-16.94-32.62c-12.29,0-17.77,13.05-17.77,32.12c0.17,21.58,6.64,32.63,17.27,32.63 C947.62,455.79,953.93,444.91,953.93,423.66 M966.39,423.5c0,26.44-9.47,42.83-26.74,42.83c-10.96,0-17.44-7.19-20.26-16.56v47.18 h-11.96v-114.6h11.46v16.56c3.16-11.71,11.13-18.4,21.59-18.4C956.59,380.5,966.39,394.56,966.39,423.5"/> </g> </svg>`;
+const COLIBRI="data:image/png;base64,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";
+/* ---------- 4 parcours d'introduction, étape par étape ---------- */
+const FLOWS=[
+ {n:"01",t:"Préparer une réunion",cmd:"prépare ma réunion de jeudi",inp:"Rien, ou le nom du projet si plusieurs réunions sont au calendrier",s:"Réunion client, chantier ou interne dans deux jours.",p:90,
+  st:["Repère la réunion dans l'agenda, identifie le projet, le client et les participants","Rassemble l'historique : tous les échanges mails et Teams sur le projet, les décisions du dernier PV, l'offre et la commande",
+      "Récupère sur SharePoint les documents concernés dans leur dernière version (plans, rapports, PV, annexes) et signale les incohérences entre eux",
+      "Interroge Odoo : avancement des tâches, heures prestées vs budget, factures ouvertes et impayées","Interroge Aiset : fiche bâtiment, équipements, consommations et remarques ouvertes du site",
+      "Assemble un deck de préparation au template ALTEO : contexte, historique, planning, points ouverts, décisions attendues","Rédige l'ordre du jour et envoie l'invitation Teams aux participants"],
+  out:["Deck de préparation au template ALTEO : contexte, historique, planning, points ouverts","Ordre du jour rédigé et invitation Teams envoyée"],
+  hu:["Ajouter les points politiques que seul vous connaissez","Animer la réunion"]},
+ {n:"02",t:"Gérer ses mails",cmd:"traite mes mails",inp:"Une fois pour toutes : vos règles de classement, choisies dans une liste (par projet, par client, par urgence)",s:"40 mails et 15 messages Teams à traiter ce matin.",p:85,
+  st:["Range chaque mail dans votre dossier projet / client et archive le bruit (newsletters, notifications automatiques)","Résume en trois lignes les mails « pour info » qui n'appellent pas de réponse",
+      "Classe les mails restants par urgence réelle : ce qui bloque quelqu'un, ce qui a une échéance contractuelle, le reste","Enregistre les pièces jointes au bon endroit sur SharePoint et les renomme selon la nomenclature ALTEO",
+      "Rédige un brouillon de réponse dans votre style pour chaque mail qui attend une action de vous, en s'appuyant sur les mails types du groupe (début de mission, demande de données, fin d'audit…)",
+      "Transforme demandes et engagements en tâches Odoo avec responsable et échéance","Signale les mails restés sans réponse de votre correspondant et prépare la relance"],
+  out:["Boîte rangée par projet, résumé du jour par ordre d'importance","Un brouillon de réponse par mail en attente + tâches Odoo créées"],
+  hu:["Relire et cliquer sur « Envoyer »","Arbitrer les priorités du jour"]},
+ {n:"03",t:"Suivre un projet",cmd:"fais le point sur mes projets",inp:"Le code du projet, ou « tous mes projets », et le mois à clôturer",s:"Fin de mois : huit projets à mettre à jour.",p:85,
+  st:["Analyse le temps imputé par personne et par tâche dans Odoo et le compare à l'estimation initiale","Calcule la marge brute et nette en temps réel (heures × coût par niveau + factures sous‑traitants, y compris heures imputées non encore facturées)",
+      "Met à jour l'estimation finale : coût restant à prester, montant final estimé, réserve","Calcule le WIP et le besoin de facturation du mois, et prépare la facture brouillon Odoo",
+      "Détecte les prestations réalisées hors offre et prépare la proposition d'extension de mission ou le décompte","Évalue l'avancement réel (jalons, livrables déposés, relectures techniques faites) et rédige l'état d'avancement",
+      "Rédige le mail au client et applique la procédure de rappel si une facture est échue"],
+  out:["Marge, WIP et estimation finale à jour dans Odoo","Facture brouillon, mail au client et état d'avancement rédigés"],
+  hu:["Valider les chiffres et le mail","Décider d'une extension de mission"]},
+ {n:"04",t:"Démarrer une nouvelle mission",cmd:"démarre le projet",inp:"Le code du projet et le lien vers le dossier SharePoint des documents reçus ; le type de mission et le template se choisissent dans une liste",s:"Commande signée, 400 fichiers reçus en vrac.",p:85,
+  st:["Passe l'offre en « Commandé » dans Odoo, crée le projet, les tâches et le budget, et désigne l'équipe","Crée le dossier SharePoint selon la structure type (00.ADMINISTRATIF → 04.DELIVRABLES + GENERAL) et propose le mapping de rangement de chaque document reçu",
+      "Supprime les doublons, compresse les photos, isole les plans utiles (situation, niveaux, schémas de principe, PID) et renomme selon la nomenclature ALTEO",
+      "Lit l'offre et le cahier des charges, en extrait le périmètre, les livrables et les délais","Rédige la fiche récapitulative du bâtiment (surfaces, installations, compteurs, contacts, historique) et la fiche récapitulative de la mission",
+      "Encode le bâtiment, ses équipements et ses documents dans Aiset","Envoie le mail type de confirmation au client et prépare l'ordre du jour du kick‑off interne et externe"],
+  out:["Dossier SharePoint rangé et renommé, projet Odoo créé","Fiche bâtiment et fiche mission (PDF), bâtiment encodé dans Aiset","Mail de confirmation au client et ordre du jour du kick‑off"],
+  hu:["Valider le mapping de rangement","Compléter ce que seul le terrain sait"]}
+];
+/* ---------- scénarios par métier ---------- */
+const METIERS={
+ all:{t:"Ce que Colibri fait pour tout le monde",short:"Tous",sc:[
+  {id:"t1",t:"Une seule question, toutes les sources",s:"« Que peux‑tu me dire sur le permis d'environnement de ce bâtiment ? », « Quelle est la conso 2025 de Loi 84 ? », « Qu'a‑t‑on décidé sur ce projet ? »",c:["SharePoint","Odoo","Outlook","Teams","Aiset"],p:95,
+   ai:["Choisit seul la bonne source — SharePoint, Odoo, mails, Teams ou Aiset — sans que vous ayez à la préciser","Répond en langage naturel avec le lien vers chaque source : le bon PV, le mail où le client a validé, la tâche Odoo, la fiche Aiset",
+       "Ouvre le document à la page et au paragraphe exacts qui portent la réponse","Synthétise tous les échanges d'un projet, y compris les fils Teams et les mails envoyés"],
+   hu:["Poser la question"]},
+  {id:"t2",t:"Un compte‑rendu de réunion rédigé, diffusé et suivi",s:"La réunion vient de se terminer.",c:["Teams","Outlook","SharePoint","Odoo"],p:85,
+   ai:["Transcrit la réunion Teams ou reprend vos notes dictées","Rédige le PV au template ALTEO : participants, décisions, actions, responsables, échéances",
+       "Complète les coordonnées manquantes des participants depuis les contacts et les mails","Dépose le PV dans le dossier projet, l'envoie aux participants","Crée les actions dans Odoo et relance automatiquement à l'approche de l'échéance"],
+   hu:["Valider le PV avant envoi"]},
+  {id:"t3",t:"Vos heures et votre fin de mois préparées",s:"Dernier jour du mois.",c:["Agenda","Outlook","Odoo"],p:90,
+   ai:["Reconstitue vos journées à partir de l'agenda, des mails envoyés et des documents modifiés","Propose la répartition des heures par projet et par tâche Odoo","Encode après votre accord",
+       "Signale les projets en dépassement et prépare le message au chef de projet"],
+   hu:["Corriger deux ou trois lignes"]},
+  {id:"t4",t:"Vos documents cohérents et conformes avant envoi",s:"Un dossier de 15 documents part chez le client demain.",c:["SharePoint","Odoo"],p:85,
+   ai:["Vérifie la cohérence du dossier : même titre de projet, même adresse, mêmes surfaces, même nom de client sur chaque document","Contrôle la nomenclature des fichiers et la présence des pièces obligatoires",
+       "Relit orthographe, cohérence et style ALTEO","Compare deux versions d'un même document et liste ce qui a changé","Compare deux fichiers de données et identifie les écarts"],
+   hu:["Trancher sur les écarts relevés"]}]},
+ proj:{t:"Cycle de vie d'une mission",short:"Mission",sc:[
+  {id:"j1",t:"De l'offre à la commande",s:"Une demande d'offre arrive par mail ou via un avis de marché.",c:["Outlook","Odoo","SharePoint"],p:80,
+   ai:["Qualifie la demande, crée le lead dans Odoo et vérifie s'il existe déjà d'autres offres pour ce bâtiment ou ce client","Prépare l'offre type à partir des modèles de devis et des listes de prix de la mission concernée",
+       "Relit l'offre en PDF, l'enregistre au bon endroit et prépare le mail type d'envoi","Prépare la relance à 30 jours et tient le statut de l'offre à jour dans Odoo"],
+   hu:["Valider et signer l'offre selon le seuil","L'appel de présentation au client"]},
+  {id:"j4",t:"Le cadrage : Colibri vous interroge jusqu'à ce que rien ne manque",s:"Avant de lancer quoi que ce soit, il faut être sûr d'avoir tout compris : périmètre réel, attentes de chaque partenaire, contraintes non écrites.",c:["Outlook","SharePoint","Odoo","Teams","Aiset"],p:80,
+   ai:["Lit d'abord tout ce qui existe déjà — offre, cahier des charges, mails échangés, PV, dossier du bâtiment — pour ne pas vous demander ce qu'il peut trouver seul",
+       "Puis vous pose ses questions une par une, jamais en bloc, en proposant à chaque fois la réponse qui lui semble la plus probable : vous validez ou vous corrigez",
+       "Descend chaque branche jusqu'au bout : à qui le livrable est‑il destiné, qui décide, qui doit être consulté, quelle échéance est contractuelle et laquelle est souhaitée, quelles données manquent et chez qui aller les chercher",
+       "Recense les attentes de chaque partenaire — client, gestionnaire, mainteneur, syndic, entreprises, autres entités du groupe — et signale celles qui se contredisent",
+       "Repère les non‑dits et les angles morts : hypothèses implicites, contraintes d'accès au site, données non disponibles, risques de dérive du périmètre",
+       "Clôture par une note de cadrage : périmètre inclus et exclu, livrables, jalons, responsables, points ouverts et questions à poser au client",
+       "N'enchaîne sur la création du projet et du dossier qu'une fois cette note validée par vous"],
+   hu:["Répondre aux questions (dix minutes)","Valider la note de cadrage"]},
+  {id:"j2",t:"Le démarrage : dossier rangé, bâtiment et mission documentés",s:"Commande signée, documents reçus en vrac.",c:["SharePoint","Odoo","Aiset","Outlook"],p:85,
+   ai:["Crée le projet Odoo (tâches, jalons, budget, équipe) et le dossier SharePoint à la structure type","Range chaque document reçu selon un mapping proposé, supprime les doublons, compresse les images, isole les plans utiles, renomme selon la nomenclature",
+       "Rédige la fiche bâtiment et la fiche de référence de la mission","Encode bâtiment, équipements et documents dans Aiset","Envoie le mail type de confirmation et prépare le kick‑off interne et externe"],
+   hu:["Valider le mapping de rangement","Le kick‑off"]},
+  {id:"j3",t:"La clôture : facturation, archivage, référence",s:"Le dernier livrable est validé.",c:["Odoo","SharePoint","Outlook"],p:85,
+   ai:["Vérifie que tout est facturé et payé, contrôle la régie et les achats imputés","Prépare la demande d'archivage et archive le dossier dans Odoo et sur SharePoint",
+       "Rédige la demande de feedback client et la demande d'attestation de bonne exécution","Crée la fiche de référence du projet (avec demande d'autorisation de publication) et prépare la réunion de clôture",
+       "Remonte au commercial les écarts entre l'offre de base et la réalité du projet"],
+   hu:["La réunion de clôture, le retour d'expérience"]}]},
+ com:{t:"Commercial",short:"Commercial",sc:[
+  {id:"c1",t:"D'un mail de prospect à l'offre CPE complète",s:"« Pouvez‑vous nous faire une proposition pour réduire nos consommations ? »",c:["Outlook","Odoo","SharePoint","Aiset"],p:80,
+   ai:["Crée le lead Odoo et monte le dossier projet","Récupère les consommations (compteurs Aiset, factures reçues par mail) et les consolide dans le classeur d'analyse ALTEO",
+       "Normalise par degrés‑jours, calcule les ratios kWh/m², compare aux références sectorielles","Estime le potentiel d'économies et un pourcentage d'engagement réaliste",
+       "Génère le deck commercial à la charte : concept, rémunération, fiche bâtiment, graphiques, potentiel, prochaines étapes"],
+   hu:["Valider les hypothèses et le % d'engagement","Présenter et négocier"]},
+  {id:"c2",t:"Répondre à un marché public sans y passer la semaine",s:"Un cahier spécial des charges de 120 pages est publié.",c:["SharePoint","Outlook","Odoo"],p:80,
+   ai:["Surveille les avis de marché pertinents et signale ceux qui correspondent à nos missions","Lit le CSC et en extrait toutes les exigences en checklist (administratives, techniques, critères, délais)",
+       "Rassemble le dossier administratif (attestations, références similaires, CV) depuis SharePoint","Rédige la note méthodologique depuis le template et les projets comparables",
+       "Vérifie la conformité point par point et la cohérence de tout le dossier (titre, surfaces, client)","Prépare le planning de réponse et les tâches Odoo de chaque contributeur"],
+   hu:["La stratégie de prix","La relecture finale et la signature"]},
+  {id:"c3",t:"Un rendez‑vous client préparé, puis suivi jusqu'au devis",s:"Vous voyez un client existant jeudi.",c:["Odoo","Outlook","SharePoint","Aiset"],p:85,
+   ai:["Fiche d'une page : historique Odoo, projets en cours, factures ouvertes, derniers mails, bâtiments du client dans Aiset, points de vigilance",
+       "Après le rendez‑vous : compte‑rendu depuis vos notes dictées","Génère le devis ou bon de commande Odoo avec le bon coefficient par niveau","Programme les relances et met à jour l'opportunité"],
+   hu:["La relation, la négociation"]},
+  {id:"c4",t:"Votre pipeline relancé chaque lundi",s:"Douze offres sorties, certaines depuis deux mois.",c:["Odoo","Outlook"],p:90,
+   ai:["Passe en revue chaque offre ouverte et retrouve le dernier échange mail","Propose une relance personnalisée par client, au bon moment","Met à jour les probabilités et produit le tableau pipeline aligné sur l'objectif du trimestre"],
+   hu:["Valider les relances en un clic"]},
+  {id:"c5",t:"Des références sur mesure pour chaque cible",s:"Un prospect hospitalier veut des preuves.",c:["SharePoint","Odoo","Aiset"],p:85,
+   ai:["Sélectionne les projets comparables (type de bâtiment, technique, taille) via les fiches de référence et Aiset","Extrait résultats chiffrés et photos","Produit les slides références à la charte ALTEO"],
+   hu:["Choisir l'angle de présentation"]}]},
+ ing:{t:"Ingénieur / chargé d'études",short:"Ingénieur",sc:[
+  {id:"i1",t:"L'analyse énergétique complète d'un bâtiment",s:"Audit, QuickScan ou baseline CPE à produire.",c:["Aiset","Outlook","SharePoint"],p:85,
+   ai:["Extrait les compteurs de tête Aiset, les relevés et factures reçus par mail, et les consolide dans le classeur type","Récupère les degrés‑jours, trace la signature énergétique, les analyses mensuelle et annuelle",
+       "Si données quart‑horaire : semaine type, profils horaires, talon de nuit, sous‑compteurs","Chiffre les leviers d'exploitation et rédige la synthèse","Dépose classeur et graphiques dans le dossier projet et dans Aiset"],
+   hu:["Interpréter avec la connaissance du terrain","La visite de site"]},
+  {id:"i2",t:"Un lot d'audits et de rapports PDF dépouillé",s:"Le client transmet les audits de son parc (PEB, AMURE, chauffage, PLAGE).",c:["SharePoint","Outlook"],p:90,
+   ai:["Lit l'intégralité des PDF","Produit une fiche par bâtiment et un tableau consolidé des mesures : investissement, économie, temps de retour","Marque N/D chaque chiffre absent plutôt que de l'inventer","Trace le Pareto du potentiel du parc"],
+   hu:["Contrôler les N/D, choisir les mesures"]},
+  {id:"i3",t:"Le cadre réglementaire d'un bâtiment reconstitué",s:"Permis d'environnement, contrôles légaux, obligations PEB ou PLAGE : où en est‑on ?",c:["SharePoint","Outlook","Aiset"],p:80,
+   ai:["Retrouve dans le dossier et les mails le permis d'environnement, ses conditions d'exploitation et ses échéances","Liste les installations classées et les contrôles légaux applicables, avec leur date de dernier contrôle",
+       "Confronte aux prescriptions techniques et réglementaires de la bibliothèque interne et aux normes en vigueur","Produit le tableau des non‑conformités et des échéances, et prépare les demandes au client"],
+   hu:["L'interprétation réglementaire et l'engagement de l'expert"]},
+  {id:"i4",t:"La GTC cartographiée, surveillée, documentée",s:"Vous reprenez une GTC Metasys, Siemens ou Priva mal documentée.",c:["Aiset","SharePoint","Outlook"],p:80,
+   ai:["Corrèle l'export BACnet et les noms longs de la supervision pour reconstituer l'arbre des points","Génère le descriptif fonctionnel en images pour le programmeur GTC",
+       "Relève chaque jour consignes, horaires et alarmes et alerte sur tout changement anormal","Croise avec les consommations Aiset pour proposer un diagnostic"],
+   hu:["Valider la logique de régulation, décider des réglages"]},
+  {id:"i5",t:"Du carnet de visite au PV envoyé",s:"Vous sortez d'une visite avec des notes dictées et 40 photos.",c:["SharePoint","Outlook","Odoo","Aiset"],p:85,
+   ai:["Transforme notes et photos en fiche bâtiment et PV de visite au template","Liste les questions ouvertes et rédige les mails aux intervenants","Crée les tâches de suivi dans Odoo et met à jour la fiche Aiset"],
+   hu:["Relecture technique"]},
+  {id:"i6",t:"Le plan de mesure et vérification, puis son suivi",s:"Un CPE est signé : il faut prouver les économies chaque mois.",c:["Aiset","SharePoint","Outlook"],p:80,
+   ai:["Propose l'option IPMVP, les facteurs statiques et la formule d'ajustement à partir de la baseline","Rédige le plan M&V depuis le template",
+       "Chaque mois : calcule les économies ajustées vs engagement, produit le rapport, alerte en cas de dérive"],
+   hu:["Valider la méthode, négocier avec le client"]}]},
+ cdp:{t:"Chef de projet",short:"Chef de projet",sc:[
+  {id:"p1",t:"Le pilotage financier de chaque projet, en continu",s:"La direction veut marge, WIP et estimation finale à jour chaque fin de mois.",c:["Odoo","Outlook","SharePoint"],p:85,
+   ai:["Analyse le temps imputé par personne et par tâche et le compare à l'estimation initiale","Calcule marge brute et nette en temps réel, sous‑traitance imputée non facturée comprise",
+       "Met à jour l'estimation finale : coût restant, montant final estimé, réserve","Calcule le WIP et le besoin de facturation du mois",
+       "Détecte les prestations hors offre et prépare l'extension de mission ou le décompte","Rédige le mail au client et met le projet à jour dans Odoo"],
+   hu:["Valider les chiffres et le mail","Décider d'une extension de mission"]},
+  {id:"p2",t:"L'état d'avancement écrit avant que vous y pensiez",s:"Chaque semaine, cinq projets à reporter.",c:["Odoo","Outlook","SharePoint","Teams"],p:85,
+   ai:["Croise heures, budget, jalons, mails et documents déposés","Évalue l'avancement réel et rédige le statut : avancement, risques, décisions en attente","Prépare les messages aux clients et partenaires sur ce qu'ils nous doivent"],
+   hu:["Ajuster le ton, arbitrer"]},
+  {id:"p3",t:"Aucun engagement oublié, ni les vôtres ni ceux des autres",s:"Les décisions se perdent dans les PV.",c:["Odoo","Outlook","Teams"],p:90,
+   ai:["Transforme chaque décision de PV ou de mail en tâche Odoo avec responsable et échéance","Relance en interne et chez les partenaires","Tient le tableau « en attente de » et escalade en cas de retard"],
+   hu:["Décider de l'escalade"]},
+  {id:"p4",t:"La facture prête au jalon, l'impayé suivi selon la procédure",s:"Un jalon est validé ; il faut facturer puis se faire payer.",c:["Odoo","Outlook","Teams"],p:90,
+   ai:["Prépare la facture brouillon depuis les heures et jalons, joint le PDF et le bon de commande","Passe la facture en « à facturer » et suit l'échéance",
+       "À J+30 prépare le rappel 2 et le brief de votre appel client ; à J+45 prépare l'escalade vers le Team Manager","Pour une facture contestée : rassemble les éléments de réponse et tient le suivi"],
+   hu:["Valider le montant","Appeler le client"]},
+  {id:"p5",t:"La coordination multi‑intervenants tenue au fil de l'eau",s:"Six entreprises sur un chantier, un planning qui bouge.",c:["Outlook","Teams","SharePoint","Odoo"],p:80,
+   ai:["Consolide les plannings reçus et signale les conflits","Prépare et rédige les réunions de coordination","Trace les questions / réponses techniques et leur statut",
+       "Organise la relecture technique : prévient le support de pôle cinq jours à l'avance et prévoit les heures"],
+   hu:["Animer, trancher"]}]},
+ tech:{t:"Exploitation / maintenance",short:"Exploitation",sc:[
+  {id:"x1",t:"Aiset, la mémoire vivante de chaque bâtiment",s:"Après une visite : vingt remarques à encoder, des équipements à créer, des plans à retrouver.",c:["Aiset","SharePoint","Outlook","Teams"],p:85,
+   ai:["Encode vos remarques dictées dans Aiset avec tags, destinataires, actions et échéances","Crée les équipements à partir des plans, PID et fiches techniques trouvés sur SharePoint, avec leur code Omniclass",
+       "Verse dans Aiset consommations, fichiers et plans venant de SharePoint — et dépose dans le dossier projet les exports Aiset","Répond à vos questions en langage naturel : équipements de plus de 15 ans, débits des groupes de ventilation, places de parking, fluides frigorigènes",
+       "Analyse les données et compare le bâtiment aux autres du portefeuille et aux références publiques"],
+   hu:["Valider les remarques avant diffusion","Décider des actions"]},
+  {id:"x2",t:"La GTC vous prévient avant le client",s:"Une consigne a été modifiée, une alarme se répète.",c:["Aiset","Outlook","Odoo"],p:80,
+   ai:["Relève chaque jour consignes, horaires et alarmes","Détecte les changements et les croise avec les consommations","Propose un diagnostic et crée la tâche d'intervention"],
+   hu:["Intervenir, décider du réglage"]},
+  {id:"x3",t:"Le rapport d'intervention écrit depuis la voiture",s:"Vous quittez le site avec des photos et une note vocale.",c:["Odoo","Outlook","SharePoint","Aiset"],p:90,
+   ai:["Rédige le rapport standard depuis vos photos et notes","Met à jour Odoo (tâche, heures, pièces) et l'historique de l'équipement dans Aiset","Envoie au client et classe dans SharePoint"],
+   hu:["Signer"]},
+  {id:"x4",t:"Votre semaine planifiée avec les bonnes fiches en main",s:"Contrats de maintenance, alarmes et demandes s'accumulent.",c:["Odoo","Aiset","Agenda","SharePoint"],p:85,
+   ai:["Propose le planning de la semaine à partir des contrats, des alarmes et des urgences","Prépare pour chaque site la fiche équipement : historique, documents, points d'attention, contrôles légaux à échéance"],
+   hu:["Ajuster l'ordre de tournée"]},
+  {id:"x5",t:"Le rapport périodique client produit et illustré",s:"Fin de trimestre : rapport de performance par bâtiment (CDM, commissionnement, CPE).",c:["Aiset","Odoo","SharePoint"],p:85,
+   ai:["Consolide consommations, températures, alarmes, interventions et indicateurs","Produit le rapport à la charte avec graphiques et explications","Relance automatiquement le même rapport au trimestre suivant"],
+   hu:["Relire, présenter au client"]}]},
+ sup:{t:"Support (RH, finance, IT, assistanat de pôle)",short:"Support",sc:[
+  {id:"s1",t:"Les rappels de paiement déroulés selon la procédure",s:"Soixante factures échues, certaines contestées.",c:["Odoo","Outlook","Teams","SharePoint"],p:85,
+   ai:["J+15 : envoie le rappel 1 depuis Odoo, chef de projet en copie","J+30 : prépare le rappel 2, crée la tâche et prévient le PM par Teams qu'un appel est attendu ; J+45 escalade vers le Team Manager",
+       "Factures contestées : transmet au PM et au TM, tient le fichier des contestations avec la raison, relance aux paliers 60 / 120 / 180 jours",
+       "Prépare mises en demeure et courriers juridiques pour accord de la direction et les classe dans les bons dossiers","Produit le tableau mensuel pour la réunion de suivi"],
+   hu:["Les appels téléphoniques","Valider les courriers"]},
+  {id:"s2",t:"Les factures fournisseurs traitées du mail au paiement",s:"80 factures arrivent par mail chaque mois.",c:["Outlook","Odoo","SharePoint"],p:90,
+   ai:["Extrait les factures des mails, lit montant, TVA, fournisseur, référence","Rapproche avec les bons de commande, détecte les doublons, impute sur le bon projet",
+       "Encode en brouillon dans Odoo et lance le circuit de validation","Prépare les paiements une fois validés"],
+   hu:["Valider et payer"]},
+  {id:"s3",t:"La clôture mensuelle et les contrôles qualité",s:"Fin de mois : le dossier doit être propre avant la revue.",c:["Odoo","Outlook"],p:85,
+   ai:["Extrait les écritures, sépare validées et brouillons, chiffre les écarts","Liste les anomalies du mois : factures non planifiées, forfaits non planifiés, factures brouillon sans date, projets sans chef de projet ou sans équipe, projets en exécution sans bon de commande",
+       "Prépare les relances aux chefs de projet concernés et assemble le dossier comptable"],
+   hu:["Valider, traiter les cas particuliers"]},
+  {id:"s4",t:"L'offre préparée et envoyée, le suivi assuré",s:"Le commercial vous demande une offre type pour vendredi.",c:["Odoo","Outlook","SharePoint"],p:85,
+   ai:["Prépare l'offre sur base des modèles de devis et des listes de prix, vérifie s'il existe d'autres offres pour le même bâtiment","Génère le PDF, l'enregistre et prépare le mail type personnalisé",
+       "Suit le circuit de validation selon le seuil de signature","Programme la relance à 30 jours et tient le statut dans Odoo"],
+   hu:["Le contact client"]},
+  {id:"s5",t:"Un nouveau collaborateur accueilli sans checklist oubliée",s:"Une embauche est signée pour le 1er du mois.",c:["Odoo","Outlook","Teams","SharePoint"],p:85,
+   ai:["Déroule la checklist d'onboarding : fiche Odoo, demandes IT, documents à signer, accès SharePoint et Aiset","Prépare le programme de la journée d'accueil et le support de présentation",
+       "Rédige le mail de bienvenue, planifie les rendez‑vous d'intégration et les formations internes","Suit ce qui reste ouvert et relance"],
+   hu:["L'accueil humain"]},
+  {id:"s6",t:"Les questions courantes répondues en direct",s:"« Combien de jours de congé ? », « Comment réserver le matériel ? », « Mon VPN ne marche pas »",c:["SharePoint","Outlook","Teams","Odoo"],p:85,
+   ai:["Répond à partir du règlement, des guides IT et des procédures internes","Prépare attestations et formulaires récurrents, crée le ticket si une intervention est nécessaire",
+       "Gère les réservations de matériel et de salles dans Odoo","Trace les demandes et produit les statistiques mensuelles"],
+   hu:["Les cas particuliers, les interventions"]}]},
+ man:{t:"Team Manager",short:"Team Manager",sc:[
+  {id:"m1",t:"Le suivi de performance de l'équipe, chaque lundi",s:"Dix personnes, trente projets, un objectif de marge brute à tenir.",c:["Odoo","Outlook","Teams","Agenda"],p:90,
+   ai:["Calcule le taux de charge de chacun (jours disponibles, imputations, absences, mouvements inter‑équipes) et signale sous‑charge et surcharge",
+       "Tient le planning de l'équipe à jour depuis Odoo, les agendas et les offres en cours, et propose les affectations","Suit chaque projet : marge, WIP, écarts d'imputation, anomalies qualité",
+       "Identifie les besoins à mettre en œuvre (renfort, formation, recrutement, arbitrage) et prépare la demande à la direction","Détecte les signaux faibles dans mails et Teams (client mécontent, blocage, retour positif)"],
+   hu:["Décider, arbitrer, parler aux gens"]},
+  {id:"m2",t:"Le MBR / QBR préparé dans le ppt type",s:"Réunion mensuelle ou trimestrielle avec la direction dans dix jours.",c:["Odoo","SharePoint","Outlook","Teams"],p:85,
+   ai:["Remplit le PowerPoint type : CA par mois réel et brouillons, Best Case / Worst Case de facturation et de marge brute, charge de travail, imputations",
+       "Produit les tableaux TOP 15 WIP et suppléments à recevoir, FLOP 20 et TOP 20 marge, factures en retard hors rappel 1",
+       "Rédige un premier commentaire par projet à partir des mails, PV et tâches, et propose l'Executive Summary avec les actions pour atteindre l'objectif",
+       "Met à jour le fichier to‑do MBR : reprend les actions précédentes, leur statut et les nouvelles","Prépare les points Qualité (félicitations, plaintes, retours support) et RH"],
+   hu:["Écrire les messages clés et les demandes à la direction","Présenter"]},
+  {id:"m3",t:"Les entretiens préparés sur des faits",s:"Entretiens annuels à mener.",c:["Odoo","Outlook","SharePoint"],p:80,
+   ai:["Réunit l'activité de l'année, les objectifs, les retours clients et collègues","Propose une trame avec points forts et axes de progrès"],
+   hu:["L'entretien lui‑même"]},
+  {id:"m4",t:"Les décisions d'équipe suivies jusqu'au bout",s:"Réunion d'équipe hebdomadaire.",c:["Teams","Odoo","Outlook"],p:85,
+   ai:["Prépare l'ordre du jour, rédige le PV, crée les actions et relance","Rédige les communications d'équipe"],
+   hu:["Animer, arbitrer"]}]},
+ dir:{t:"Direction",short:"Direction",sc:[
+  {id:"d1",t:"Le briefing du lundi, consolidé toutes entités",s:"Six entités, des centaines de mails.",c:["Odoo","Outlook","Teams","SharePoint"],p:85,
+   ai:["Consolide chiffre d'affaires, marge brute vs objectif, pipeline, facturation, WIP et impayés par entité et par équipe","Relève les signaux faibles (clients, RH, risques) dans mails et Teams","Rédige la note de synthèse hebdomadaire"],
+   hu:["Décider"]},
+  {id:"d2",t:"Les MBR des équipes consolidés en une lecture",s:"Huit Team Managers présentent leur MBR.",c:["SharePoint","Odoo","Outlook"],p:85,
+   ai:["Lit tous les MBR et fichiers Best Case / Worst Case","Consolide marge, WIP, impayés, charge et qualité au niveau de l'entité","Repère les incohérences et les projets qui reviennent d'un mois sur l'autre, prépare les questions à poser",
+       "Rédige le PV, trace les décisions et relance les responsables jusqu'à exécution"],
+   hu:["Présider, trancher"]},
+  {id:"d3",t:"Le dossier du conseil monté et ses décisions suivies",s:"Conseil ou comité dans dix jours.",c:["SharePoint","Outlook","Odoo"],p:85,
+   ai:["Prépare ordre du jour, dossiers et chiffres","Rédige le PV, trace les décisions et relance les responsables"],
+   hu:["Présider, trancher"]},
+  {id:"d4",t:"Veille marché, réglementaire et présence LinkedIn",s:"Appels d'offres, réglementation et concurrence évoluent chaque semaine.",c:["Outlook","SharePoint"],p:80,
+   ai:["Assure la veille et résume ce qui compte pour le groupe","Signale les évolutions réglementaires qui touchent nos missions","Propose des publications LinkedIn (succès de mission, expertise) à valider"],
+   hu:["Valider, publier"]},
+  {id:"d5",t:"Une offre stratégique coordonnée entre entités",s:"Un marché majeur mobilise trois entités du groupe.",c:["SharePoint","Odoo","Outlook","Teams"],p:80,
+   ai:["Répartit et suit les contributions, vérifie la cohérence et consolide les chiffres","Prépare le budget de collaboration intragroupe","Produit le dossier final à la charte ALTEO"],
+   hu:["La stratégie, le prix, la signature"]}]}
+};
+
+/* ---------- cas réel mis en avant ---------- */
+const REALCASE={
+ cmd:"génère le deck lead CPE",
+ inp:"Le code du lead et le lien vers le dossier SharePoint du bâtiment. Le template (Deplasse ou ALTEO) et la formule de rémunération à mettre en avant se choisissent dans une liste.",
+ intro:"Un lead arrive sur un immeuble de bureaux. Une phrase suffit : la skill connaît nos templates, nos règles de calcul et nos sources de données.",
+ did:["Ouvre le dossier du bâtiment et lit tout ce qui existe : rapport de comptabilité énergétique, certificat PEB, état des lieux technique, étude BREEAM",
+      "Retrouve les EAN des compteurs et télécharge les courbes quart‑horaire Fluvius et les données Aiset",
+      "Calcule la signature énergétique gaz par degrés‑jours, le talon de nuit, les profils horaires et le potentiel d'économies",
+      "Applique la méthode IPMVP et notre modèle de partage de valeur pour chiffrer les trois formules de rémunération",
+      "Met le tout en forme dans nos modèles ALTEO et dépose les fichiers dans le dossier projet"],
+ out:[{f:"Fiche_batiment_Louise143.pdf",d:"Identité, propriétaire et locataires, enveloppe, techniques HVAC, occupation — chaque donnée avec sa source citée."},
+      {f:"Louise143_Analyse_Energetique_v1.xlsx",d:"12 onglets : synthèse CPE, partage de valeur, analyse mensuelle, signature gaz, profils hebdomadaire et horaire, données sources."},
+      {f:"CPE_NoCureNoPay_Louise143_FR.pptx",d:"Deck commercial à la charte : concept No Cure No Pay, trois formules de rémunération, méthodologie IPMVP, fiche technique, potentiel."}],
+ hu:"Donner la commande, relire les hypothèses, valider le pourcentage d'engagement avant d'envoyer au client."
+};
+/* ---------- ce que l'employé fournit ---------- */
+const INPUTS={
+ t1:"Une fois pour toutes : vos règles de classement, choisies dans une liste (par projet, par client, par urgence) et les dossiers cibles",
+ t2:"L'enregistrement Teams ou vos notes dictées, et le projet auquel rattacher le PV",
+ t3:"Le mois à clôturer — rien d'autre, l'agenda et les mails font le reste",
+ t4:"Le lien vers le dossier SharePoint à vérifier",
+ j1:"Le mail du client ou l'avis de marché, et le type de mission choisi dans la liste du catalogue",
+ j4:"Dix minutes pour répondre aux questions de Colibri",
+ j2:"Le code du projet et le lien vers le dossier des documents reçus ; le type de mission et le template se choisissent dans une liste",
+ j3:"Le code du projet à clôturer",
+ c1:"L'adresse du bâtiment et les factures ou relevés disponibles ; le template du deck se choisit dans une liste",
+ c2:"Le cahier spécial des charges (PDF) et la date de remise",
+ c3:"Le nom du client et la date du rendez‑vous",
+ c4:"Rien : Colibri lit vos offres ouvertes dans Odoo",
+ c5:"Le secteur et le type de bâtiment du prospect",
+ i1:"Le bâtiment concerné et les fichiers de relevés reçus ; les compteurs Aiset sont retrouvés seuls",
+ i2:"Le dossier contenant les audits PDF",
+ i3:"L'adresse du bâtiment ou le code du projet",
+ i4:"L'export de la GTC (BACnet ou supervision) et l'accès au site",
+ i5:"Vos photos et votre note vocale de visite",
+ i6:"L'année de référence et le contrat signé",
+ p1:"Le code du projet, ou « tous mes projets », et le mois à clôturer",
+ p2:"Rien : Colibri part de vos projets Odoo en cours",
+ p3:"Le PV de réunion ou le fil de mails à dépouiller",
+ p4:"Le jalon atteint et le projet concerné",
+ p5:"Les plannings reçus des entreprises et la date de la prochaine coordination",
+ x1:"Vos remarques dictées et le bâtiment concerné ; les tags et destinataires sont proposés automatiquement",
+ x2:"L'accès à la GTC du site, une seule fois",
+ x3:"Vos photos et votre note vocale, depuis le téléphone",
+ x4:"Rien : les contrats Odoo et les alarmes suffisent",
+ x5:"Le trimestre et la liste des bâtiments",
+ s1:"Rien : Colibri suit les échéances des factures Odoo",
+ s2:"Rien : les factures arrivent dans la boîte mail dédiée",
+ s3:"Le trimestre à clôturer",
+ s4:"Le client, le type de mission et le template, choisis dans une liste",
+ s5:"Le nom du collaborateur, sa fonction et sa date d'entrée",
+ s6:"La question posée par le collaborateur",
+ m1:"Rien : Colibri part de votre équipe dans Odoo",
+ m2:"Le mois ou le trimestre à présenter, et le fichier to‑do de la réunion précédente",
+ m3:"Le nom du collaborateur et la date de l'entretien",
+ m4:"Les points que vous voulez mettre à l'ordre du jour",
+ d1:"Rien : le périmètre des entités est configuré une fois",
+ d2:"Les MBR des équipes déposés sur SharePoint",
+ d3:"La date du conseil et les points à l'ordre du jour",
+ d4:"Les thèmes de veille à suivre, définis une fois",
+ d5:"Le cahier des charges et les entités à mobiliser"
+};
+/* ---------- livrables par cas d'usage ---------- */
+const LIVRABLES={
+ t1:"Boîte triée, résumé du jour, brouillons de réponse prêts à envoyer, tâches Odoo créées",
+ t2:"PV au format ALTEO (PDF) diffusé aux participants + actions créées dans Odoo",
+ t3:"Heures encodées dans Odoo + liste des projets en dépassement",
+ t4:"Réponse sourcée avec les liens, ou note de synthèse du projet",
+ j1:"Lead Odoo, offre en PDF sur base des modèles, mail type d'envoi prêt",
+ j4:"Note de cadrage : périmètre inclus et exclu, livrables, jalons, responsables, questions ouvertes",
+ j2:"Dossier SharePoint rangé et renommé, projet Odoo créé, fiche bâtiment et fiche mission (PDF), bâtiment encodé dans Aiset",
+ j3:"Dossier archivé, demande d'attestation de bonne exécution, fiche de référence du projet",
+ c1:"Classeur d'analyse énergétique + deck commercial CPE à la charte, prêts pour le client",
+ c2:"Checklist de conformité au cahier des charges, note méthodologique rédigée, dossier administratif complet",
+ c3:"Fiche client d'une page avant le rendez‑vous, puis PV et devis Odoo après",
+ c4:"Tableau du pipeline de la semaine + mails de relance personnalisés à valider",
+ c5:"Slides de références ciblées sur le secteur du prospect",
+ i1:"Classeur d'analyse énergétique complet (signature DJU, profils, synthèse) + graphiques",
+ i2:"Fiche par bâtiment + tableau consolidé des mesures avec investissement, économie et temps de retour",
+ i3:"Tableau des échéances réglementaires et des non‑conformités + demandes à envoyer au client",
+ i4:"Arbre des points GTC, descriptif fonctionnel en images, relevé quotidien avec alertes",
+ i5:"Fiche bâtiment, PV de visite au template, mails aux intervenants, tâches de suivi",
+ i6:"Plan de mesure et vérification IPMVP + rapport mensuel d'économies ajustées",
+ p1:"Marge et WIP à jour, estimation finale révisée, facture brouillon Odoo, mail au client",
+ p2:"État d'avancement rédigé par projet + messages aux clients et partenaires",
+ p3:"Tâches Odoo assignées et relancées + tableau « en attente de »",
+ p4:"Facture brouillon avec pièces jointes, puis rappels selon la procédure du groupe",
+ p5:"Planning consolidé, ordre du jour et PV des réunions de coordination",
+ x1:"Remarques encodées dans Aiset avec tags et destinataires, équipements créés, réponses à vos questions",
+ x2:"Relevé quotidien des consignes et alarmes + alerte et tâche d'intervention",
+ x3:"Rapport d'intervention (PDF) envoyé au client, Odoo et Aiset à jour",
+ x4:"Planning de la semaine + fiche équipement par site",
+ x5:"Rapport de performance trimestriel à la charte, avec graphiques",
+ s1:"Rappels envoyés selon la procédure, courriers préparés, tableau mensuel des impayés",
+ s2:"Factures encodées en brouillon dans Odoo + fichier de paiement prêt",
+ s3:"Dossier comptable assemblé + liste des anomalies à corriger",
+ s4:"Offre en PDF, mail type personnalisé, relance programmée",
+ s5:"Checklist d'onboarding suivie, mail de bienvenue, rendez‑vous planifiés",
+ s6:"Réponses envoyées, attestations générées, statistiques mensuelles",
+ m1:"Tableau de bord de l'équipe : charge, marge, retards, anomalies + propositions d'affectation",
+ m2:"PowerPoint MBR/QBR rempli, fichier to‑do mis à jour, Executive Summary proposé",
+ m3:"Trame d'entretien documentée par les faits de l'année",
+ m4:"Ordre du jour, PV, actions créées et relancées",
+ d1:"Note de synthèse hebdomadaire consolidée toutes entités",
+ d2:"Synthèse des MBR, questions à poser, PV et suivi des décisions",
+ d3:"Dossier du conseil (ordre du jour, chiffres) + PV et suivi",
+ d4:"Revue de veille hebdomadaire + publications LinkedIn à valider",
+ d5:"Dossier d'offre consolidé entre entités, à la charte ALTEO"
+};
+
+const LEVELS=[["1","Inutile pour moi"],["2","Peu utile"],["3","Utile"],["4","Très utile"],["5","J'en rêve !!!"]];
+const ALLSC={};Object.entries(METIERS).forEach(([k,m])=>m.sc.forEach(s=>ALLSC[s.id]={s,m:m.short}));
+const METIER_KEYS=["com","ing","cdp","tech","sup","man","dir"];
+const PROJ_KEYS=["com","ing","cdp","tech"];
+const $=s=>document.querySelector(s);
+document.getElementById("logo").innerHTML=LOGO;
+document.getElementById("colibri-logo").src=COLIBRI;
+
+let state={step:"intro",notes:{},ouvert:{},remarques:{},metiers2:[]};
+try{const s=localStorage.getItem("colibri-v4");if(s)state=Object.assign(state,JSON.parse(s));}catch(e){}
+function persist(){try{localStorage.setItem("colibri-v4",JSON.stringify(state));}catch(e){}}
+
+$("#real").innerHTML=`<p class="tagline">Un cas réel, ce matin</p>
+  <h3>Une phrase tapée à 8 h 40 : « ${REALCASE.cmd} »</h3>
+  <p class="situ">${REALCASE.intro}</p>
+  <p class="give"><b>Ce que j'ai fourni :</b> ${REALCASE.inp}</p>
+  <div class="cols">
+    <div><h4>Ce que Colibri a fait, seul</h4><ol>${REALCASE.did.map(x=>`<li>${x}</li>`).join("")}</ol></div>
+    <div><h4>Ce que j'ai obtenu — 3 documents finis</h4><div class="files">${REALCASE.out.map(o=>`<div class="file"><b>${o.f}</b><span>${o.d}</span></div>`).join("")}</div></div>
+  </div>
+  <p class="foot"><b>Mon travail :</b> ${REALCASE.hu}</p>`;
+
+$("#flows").innerHTML=FLOWS.map(f=>`<div class="flow">
+  <div class="hd"><span class="num">${f.n}</span><h3>${f.t}</h3></div>
+  <p class="cmdline"><span class="cmd">${f.cmd}</span></p>
+  <p class="situ">${f.s}</p>
+  <p class="give"><b>Vous fournissez :</b> ${f.inp}</p>
+  <ol>${f.st.map(x=>`<li>${x}</li>`).join("")}</ol>
+  <div class="got"><h4>Ce que j'obtiens</h4><ul>${f.out.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+  <p class="rest"><b>Préparé par Colibri : ~${f.p} %.</b> Vous faites vous‑même : ${f.hu.join(" · ")}</p></div>`).join("");
+
+METIER_KEYS.forEach(k=>{
+  $("#metier").insertAdjacentHTML("beforeend",`<button class="chip" type="button" data-k="${k}">${METIERS[k].t}</button>`);
+  $("#metiers2").insertAdjacentHTML("beforeend",`<button class="chip" type="button" data-k="${k}">${METIERS[k].short}</button>`);
+});
+
+function scenarioSection(key,idx){
+  const m=METIERS[key];
+  return `<section class="step" data-step="sc-${key}">
+  <div class="card">
+    <div class="title-rule"><p class="eyebrow">${idx} · ${m.short}</p><h2>${m.t}</h2></div>
+    <p class="muted" style="margin-bottom:6px">Pour chaque cas : à gauche, ce que Colibri prépare ; à droite, ce que vous continuez à faire vous‑même. Indiquez ensuite l'utilité pour votre métier, et ajoutez une remarque si vous le souhaitez.</p>
+    ${m.sc.map(s=>`<div class="sc" data-id="${s.id}">
+      <div class="sc-head"><h3>${s.t}</h3><div class="share"><b>~${s.p} %</b><span>préparé par Colibri</span></div></div>
+      <p class="situ">${s.s}</p>
+      <div class="tags">${s.c.map(c=>`<span class="tag">${c}</span>`).join("")}</div>
+      ${INPUTS[s.id]?`<p class="inp"><b>Vous fournissez</b>${INPUTS[s.id]}</p>`:""}
+      <div class="split">
+        <div class="box ai"><h4>Ce que Colibri prépare</h4><ol>${s.ai.map(x=>`<li>${x}</li>`).join("")}</ol></div>
+        <div class="box hu"><h4>Ce que vous faites vous‑même</h4><ul>${s.hu.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+      </div>
+      ${LIVRABLES[s.id]?`<p class="liv"><b>Ce que j'obtiens</b>${LIVRABLES[s.id]}</p>`:""}
+      <div class="rate"><div class="lab">Utilité pour mon métier</div>
+        <div class="seg">${LEVELS.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="false"><b>${v}</b><small>${l}</small></button>`).join("")}</div></div>
+      <div class="remark"><label for="r-${s.id}">Votre remarque sur ce cas (facultatif)</label><textarea id="r-${s.id}" data-remark="${s.id}" placeholder="Ce qui manque, ce qui ne conviendrait pas, une précision utile…"></textarea></div>
+    </div>`).join("")}
+    <div class="field" style="margin-top:22px"><label for="o-${key}">Quelle autre tâche aimeriez‑vous confier à Colibri dans votre métier ?</label><textarea id="o-${key}" data-open="${key}"></textarea></div>
+  </div>
+  <div class="nav"><button class="btn" data-prev>Retour</button><button class="btn primary" data-next>Continuer</button></div>
+</section>`;
+}
+function selectedMetiers(){const ms=[...(state.metier?[state.metier]:[]),...(state.metiers2||[]).filter(k=>k!==state.metier)];
+  return ["all",...(ms.some(k=>PROJ_KEYS.includes(k))?["proj"]:[]),...ms];}
+function buildScenarios(){
+  const keys=selectedMetiers();
+  $("#scenarios").innerHTML=keys.map((k,i)=>scenarioSection(k,i+2)).join("");
+  document.querySelectorAll("textarea[data-open]").forEach(t=>{t.value=state.ouvert[t.dataset.open]||"";t.addEventListener("input",e=>{state.ouvert[e.target.dataset.open]=e.target.value;persist();});});
+  document.querySelectorAll("textarea[data-remark]").forEach(t=>{t.value=(state.remarques||{})[t.dataset.remark]||"";t.addEventListener("input",e=>{(state.remarques=state.remarques||{})[e.target.dataset.remark]=e.target.value;persist();});});
+  document.querySelectorAll(".sc").forEach(a=>{
+    const id=a.dataset.id;if(state.notes[id]){const b=a.querySelector(`[data-v="${state.notes[id]}"]`);if(b)b.setAttribute("aria-pressed","true");}
+    a.addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(!b)return;[...b.parentElement.children].forEach(c=>c.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");state.notes[id]=+b.dataset.v;persist();});
+  });
+}
+function stepList(){return ["intro","id",...selectedMetiers().map(k=>"sc-"+k),"adopt","done"];}
+
+const chipGroups=["metier","metiers2","niveau","anciennete","usage","freins","pilote"];
+chipGroups.forEach(g=>{
+  const el=document.getElementById(g);const single=el.hasAttribute("data-single");
+  el.addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const val=b.dataset.k||b.textContent;
+    if(single){[...el.children].forEach(c=>c.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");state[g]=val;}
+    else{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on?"true":"false");state[g]=[...el.children].filter(c=>c.getAttribute("aria-pressed")==="true").map(c=>c.dataset.k||c.textContent);}
+    persist();});
+});
+["prenom","nom","entite","pole","commentaire"].forEach(id=>{document.getElementById(id).addEventListener("input",e=>{state[id]=e.target.value;persist();});});
+(function restore(){
+  ["prenom","nom","entite","pole","commentaire"].forEach(id=>{if(state[id])document.getElementById(id).value=state[id];});
+  chipGroups.forEach(g=>{const el=document.getElementById(g);const v=state[g];if(!v)return;[...el.children].forEach(c=>{const val=c.dataset.k||c.textContent;c.setAttribute("aria-pressed",(Array.isArray(v)?v.includes(val):v===val)?"true":"false");});});
+})();
+
+function show(name){
+  const steps=stepList();if(!steps.includes(name))name="intro";
+  state.step=name;persist();
+  document.querySelectorAll(".step").forEach(s=>s.classList.toggle("active",s.dataset.step===name));
+  const i=steps.indexOf(name),n=steps.length-2;
+  $("#progress").hidden=(name==="intro"||name==="done");
+  $("#pbar").style.width=Math.round(i/n*100)+"%";
+  const lbl=name==="id"?"Vous":name==="adopt"?"Adoption":name.startsWith("sc-")?METIERS[name.slice(3)].t:"";
+  $("#plabel").textContent=lbl;$("#pcount").textContent=`Étape ${i} / ${n}`;
+  window.scrollTo({top:0,behavior:"instant"});
+}
+document.addEventListener("click",e=>{
+  const steps=stepList();const i=steps.indexOf(state.step);
+  if(e.target.matches("[data-next]")){
+    if(state.step==="id"){const ok=state.prenom&&state.nom&&state.entite&&state.metier&&state.niveau;$("#err1").classList.toggle("show",!ok);if(!ok)return;buildScenarios();}
+    show(stepList()[i+1]);}
+  if(e.target.matches("[data-prev]"))show(steps[i-1]);
+});
+if(state.metier)buildScenarios();
+show(state.step==="done"?"intro":state.step);
+$("#send").addEventListener("click",()=>show("done"));
+$("#again").addEventListener("click",()=>{state={step:"intro",notes:{},ouvert:{},remarques:{},metiers2:[]};persist();location.reload();});
+
+const CODE="colibri2026";
+const DEMO_ROWS=(()=>{const P=[["Sophie","Martin","Deplasse","sup"],["Karim","Benali","CUB3","ing"],["Julie","Dupont","A+ Concept","cdp"],["Thomas","Peeters","Freestone","com"],["Anne","Lambert","FANDO","dir"],["Marc","Dubois","Deplasse","tech"],["Laura","Janssens","AISET","man"],["Pierre","Colin","Deplasse","ing"]];
+ let s=11;const r=()=>{s=(s*9301+49297)%233280;return s/233280;};
+ return P.map(([prenom,nom,entite,k],i)=>{const notes={};["all",...(PROJ_KEYS.includes(k)?["proj"]:[]),k].forEach(m=>METIERS[m].sc.forEach(sc=>{notes[sc.id]=Math.min(5,1+Math.floor(r()*5+(sc.id.endsWith("1")?0.9:0)));}));
+  return {prenom,nom,entite,metier:METIERS[k].t,pilote:i%2?"Oui, je veux être testeur pilote":"Peut‑être, selon le sujet",notes,
+   ouvert:i===1?{ing:"Récupérer automatiquement les relevés de compteurs envoyés en PDF par les clients et les injecter dans Aiset."}:i===2?{cdp:"Un rappel quand un jalon approche sans livrable déposé sur SharePoint."}:{},
+   remarques:i===1?{i1:"Attention aux compteurs à cheval sur deux périodes de facturation."}:i===3?{c4:"À condition que le ton des relances reste personnalisable."}:{},
+   commentaire:i===4?"Priorité au suivi budgétaire multi‑entités et aux relances clients.":""};});})();
+let rows=[];
+function toResults(){$("#form-root").hidden=true;$("#results").hidden=false;$("#progress").hidden=true;window.scrollTo(0,0);}
+function toForm(){$("#form-root").hidden=false;$("#results").hidden=true;show(state.step);}
+$("#toResults").addEventListener("click",toResults);$("#resBack").addEventListener("click",toForm);$("#resBack2").addEventListener("click",toForm);
+$("#resEnter").addEventListener("click",()=>{
+  if($("#code").value.trim().toLowerCase()!==CODE){$("#errCode").classList.add("show");return;}
+  $("#errCode").classList.remove("show");$("#resLogin").hidden=true;$("#resBody").hidden=false;rows=DEMO_ROWS;fillFilters();render();
+});
+function fillFilters(){const opt=(sel,vals,label)=>{sel.innerHTML=`<option value="">${label}</option>`+[...new Set(vals.filter(Boolean))].sort().map(v=>`<option>${v}</option>`).join("");};
+  opt($("#fMetier"),rows.map(r=>r.metier),"Tous les métiers");opt($("#fEntite"),rows.map(r=>r.entite),"Toutes les entités");}
+$("#fMetier").addEventListener("change",render);$("#fEntite").addEventListener("change",render);
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function render(){
+  const m=$("#fMetier").value,e=$("#fEntite").value;const rs=rows.filter(r=>(!m||r.metier===m)&&(!e||r.entite===e));
+  const rk=Object.keys(ALLSC).map(id=>{const ns=rs.map(r=>r.notes[id]).filter(Boolean);const n=ns.length;
+    return {id,t:ALLSC[id].s.t,m:ALLSC[id].m,n,u:n?ns.reduce((a,b)=>a+b,0)/n:0,hi:n?ns.filter(x=>x>=4).length/n:0};}).filter(x=>x.n).sort((a,b)=>b.u-a.u||b.n-a.n);
+  $("#kCount").textContent=rs.length;$("#kEnt").textContent=new Set(rs.map(r=>r.entite)).size;
+  $("#kPil").textContent=rs.filter(r=>r.pilote.startsWith("Oui")).length;
+  $("#kDream").textContent=rs.reduce((a,r)=>a+Object.values(r.notes).filter(v=>v===5).length,0);
+  $("#rank tbody").innerHTML=rk.map(r=>`<tr><td>${esc(r.t)}</td><td class="muted">${esc(r.m)}</td><td><div class="scorebar"><i style="width:${Math.round(r.u/5*100)}%"></i></div><span class="muted">${r.u.toFixed(1)}</span></td><td class="num">${Math.round(r.hi*100)}%</td><td class="num">${r.n}</td></tr>`).join("");
+  $("#who tbody").innerHTML=rs.map(r=>`<tr><td>${esc(r.prenom)} ${esc(r.nom)}</td><td>${esc(r.entite)}</td><td>${esc(r.metier)}</td><td>${r.pilote.startsWith("Oui")?"✓":""}</td></tr>`).join("");
+  const v=[];rs.forEach(r=>{Object.entries(r.ouvert||{}).forEach(([k,t])=>v.push({who:`${r.prenom} ${r.nom} · ${r.metier}`,t}));
+    Object.entries(r.remarques||{}).forEach(([k,t])=>{if(t&&t.trim())v.push({who:`${r.prenom} ${r.nom} · ${(ALLSC[k]||{s:{t:k}}).s.t}`,t});});
+    if(r.commentaire)v.push({who:`${r.prenom} ${r.nom} · ${r.metier}`,t:r.commentaire});});
+  $("#verbs").innerHTML=v.map(x=>`<div class="verb">${esc(x.t)}<small>${esc(x.who)}</small></div>`).join("")||`<p class="muted">Aucun verbatim.</p>`;
+}
+</script>
+</body>
+</html>
